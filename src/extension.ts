@@ -4,26 +4,20 @@ import { fileSync} from 'tmp';
 import { writeFileSync } from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
-	context.subscriptions.push( vscode.commands.registerCommand('formatyaya-vscode.helloWorld', () => {
-		vscode.window.showInformationMessage('cmd');
-
-		const tmpobj = fileSync({ prefix: 'formatyaya-',postfix: '.dic'});
-		writeFileSync(tmpobj.name, "func { entity }");
-
-		let formatted = execFileSync(`${__dirname}\\formatyaya.exe`,[tmpobj.name]);
-		vscode.window.showInformationMessage('STDOUT'+ formatted.toString());
-	}));
-
 	const provideDocumentFormattingEdits = <vscode.DocumentFormattingEditProvider>{
-		provideDocumentFormattingEdits: (document: vscode.TextDocument, options: vscode.FormattingOptions) => format(document, null, options)
+		provideDocumentFormattingEdits: (document: vscode.TextDocument) => format(document, null)
 	};
 	context.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider('aya', provideDocumentFormattingEdits));
 }
 
-export function format(document: vscode.TextDocument,range: vscode.Range | null, defaultOptions: vscode.FormattingOptions) {
+export function format(document: vscode.TextDocument,range: vscode.Range | null) {
 	if (range === null) {
         range = initDocumentRange(document);
     }
+
+	const settings = vscode.workspace.getConfiguration('formate');
+	const useSpace = settings.get('useSpace',false);
+	const spaceCount = settings.get('spaceCount', 2);
 
 	const sep = __dirname.includes("/") ? "/" : "\\";
 	const result: vscode.TextEdit[] = [];
@@ -34,7 +28,13 @@ export function format(document: vscode.TextDocument,range: vscode.Range | null,
 
 	let formatted : Buffer;
 	try {
-		formatted = execFileSync(`${__dirname}${sep}formatyaya.exe`,[tmpobj.name]);
+		const options :string[] = [];
+		if (useSpace) {
+			options.push("-s");
+		}
+		options.push("-c",spaceCount.toString(),tmpobj.name);
+
+		formatted = execFileSync(`${__dirname}${sep}formatyaya.exe`,options);
 	} catch(error) {
 		throw(error);
 	}
