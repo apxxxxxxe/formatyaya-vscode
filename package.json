@@ -17,25 +17,25 @@
 	],
 	"main": "./out/extension",
 	"contributes": {
-        "type": "object",
-        "configuration": {
-            "title": "formatyaya-vscode",
-            "properties": {
-                "formatyaya-vscode.useSpace": {
-                    "scope": "resource",
-                    "type": "boolean",
-                    "default": true,
-                    "description": "use spaces as indents"
-                },
-                "formatyaya-vscode.spaceCount": {
-                    "scope": "resource",
-                    "type": "number",
-                    "default": 0,
-                    "description": "number of spaces when using spaces as indents"
-                }
-            }
-        }
-    },
+		"type": "object",
+		"configuration": {
+			"title": "formatyaya-vscode",
+			"properties": {
+				"formatyaya-vscode.useSpace": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "use spaces as indents"
+				},
+				"formatyaya-vscode.spaceCount": {
+					"scope": "resource",
+					"type": "number",
+					"default": 0,
+					"description": "number of spaces when using spaces as indents"
+				}
+			}
+		}
+	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
