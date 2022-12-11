@@ -64,7 +64,8 @@ export function format(
   tmpobj.removeCallback();
 
   if (formatted) {
-    result.push(new vscode.TextEdit(range, formatted.toString()));
+	const f = formatted.toString().replace(/\n+$/,""); // execFileSyncで生じる末尾の改行を削除
+    result.push(new vscode.TextEdit(range, f));
   }
 
   return result;
