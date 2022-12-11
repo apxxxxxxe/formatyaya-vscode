@@ -37,7 +37,7 @@ export function format(
     range = initDocumentRange(document);
   }
 
-  const settings = vscode.workspace.getConfiguration("formate");
+  const settings = vscode.workspace.getConfiguration("formatyaya-vscode");
   const useSpace = settings.get("useSpace", false);
   const spaceCount = settings.get("spaceCount", 2);
 
