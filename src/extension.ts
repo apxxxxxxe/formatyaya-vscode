@@ -1,26 +1,57 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { execFileSync } from 'child_process';
+import { fileSync} from 'tmp';
+import { writeFileSync } from 'fs';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	context.subscriptions.push( vscode.commands.registerCommand('formatyaya-vscode.helloWorld', () => {
+		vscode.window.showInformationMessage('cmd');
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "formatyaya-vscode" is now active!');
+		const tmpobj = fileSync({ prefix: 'formatyaya-',postfix: '.dic'});
+		writeFileSync(tmpobj.name, "func { entity }");
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('formatyaya-vscode.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from formatyaya-vscode!');
-	});
+		let formatted = execFileSync(`${__dirname}\\formatyaya.exe`,[tmpobj.name]);
+		vscode.window.showInformationMessage('STDOUT'+ formatted.toString());
+	}));
 
-	context.subscriptions.push(disposable);
+	const provideDocumentFormattingEdits = <vscode.DocumentFormattingEditProvider>{
+		provideDocumentFormattingEdits: (document: vscode.TextDocument, options: vscode.FormattingOptions) => format(document, null, options)
+	};
+	context.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider('aya', provideDocumentFormattingEdits));
 }
 
-// This method is called when your extension is deactivated
+export function format(document: vscode.TextDocument,range: vscode.Range | null, defaultOptions: vscode.FormattingOptions) {
+	if (range === null) {
+        range = initDocumentRange(document);
+    }
+
+	const sep = __dirname.includes("/") ? "/" : "\\";
+	const result: vscode.TextEdit[] = [];
+    const content = document.getText(range);
+
+	const tmpobj = fileSync({ prefix: 'formatyaya-',postfix: '.dic'});
+	writeFileSync(tmpobj.name, content);
+
+	let formatted : Buffer;
+	try {
+		formatted = execFileSync(`${__dirname}${sep}formatyaya.exe`,[tmpobj.name]);
+	} catch(error) {
+		throw(error);
+	}
+
+	if (formatted) {
+		result.push(new vscode.TextEdit(range, formatted.toString()));
+	}
+
+    return result;
+}
+
+function initDocumentRange(document: vscode.TextDocument): vscode.Range {
+    const lastLine = document.lineCount - 1;
+    const start = new vscode.Position(0, 0);
+    const end = new vscode.Position(lastLine, document.lineAt(lastLine).text.length);
+
+    return new vscode.Range(start, end);
+}
+
 export function deactivate() {}
