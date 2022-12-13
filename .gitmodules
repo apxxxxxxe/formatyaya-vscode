@@ -1,0 +1,3 @@
+[submodule "src/formatyaya"]
+	path = src/formatyaya
+	url = https://github.com/apxxxxxxe/formatyaya.git
