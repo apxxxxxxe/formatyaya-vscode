@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { execFileSync } from "child_process";
 import { fileSync } from "tmp";
-import { writeFileSync } from "fs";
+import { writeFileSync, existsSync } from "fs";
 import { platform, arch } from "process";
 
 const isNotSupported = "ISNOTSUPPORTED";
@@ -48,6 +48,14 @@ export function format(
   const tmpobj = fileSync({ prefix: "formatyaya-", postfix: ".dic" });
   writeFileSync(tmpobj.name, content);
 
+  const path = `${__dirname}${sep}${cmd}`;
+  if (!existsSync( path )) {
+    vscode.window.showErrorMessage(
+		`${path} not found.`
+    );
+	return [];
+  }
+
   let formatted: Buffer;
   try {
     const options: string[] = [];
@@ -56,7 +64,7 @@ export function format(
     }
     options.push("-c", spaceCount.toString(), tmpobj.name);
 
-    formatted = execFileSync(`${__dirname}${sep}${cmd}`, options);
+    formatted = execFileSync(path, options);
   } catch (error) {
     throw error;
   }
