@@ -6,6 +6,10 @@ formatyaya-vscode is a VSCode extension of [a formatter for yaya(aya)](https://g
 
 ---
 
+### 0.1.4 (pre release)
+
+- (submodule)fix: FlowKeyXXとFlowXXSubの間にBlankLineが残らないように
+
 ### 0.1.3 (pre release)
 
 - 実行前にformatyayaの存在を確認するように
