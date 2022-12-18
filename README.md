@@ -1,5 +1,7 @@
 # formatyaya-vscode README
 
+![formatyaya_transitoion](https://user-images.githubusercontent.com/39634779/207256057-b4db521f-1595-4e23-95d7-81888f27d361.gif)
+
 formatyaya-vscode is a VSCode extension of [a formatter for yaya(aya)](https://github.com/apxxxxxxe/formatyaya).
 
 [yaya(aya)のフォーマッタ](https://github.com/apxxxxxxe/formatyaya)をVSCodeで使えるようにしたものです。
@@ -21,7 +23,7 @@ formatyaya-vscode is a VSCode extension of [a formatter for yaya(aya)](https://g
 
 ### 0.1.6, 0.1.7
 
-ヒアドキュメントのインデントがおかしかったのを修正
+- ヒアドキュメントのインデントがおかしかったのを修正
 
 ### 0.1.5 (pre release)
 
