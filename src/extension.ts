@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { execFileSync } from "child_process";
+import { spawnSync } from "child_process";
 import { fileSync } from "tmp";
 import { writeFileSync, existsSync } from "fs";
 import { platform, arch } from "process";
@@ -39,7 +39,8 @@ export function format(
 
   const settings = vscode.workspace.getConfiguration("formatyaya-vscode");
   const useSpace = settings.get("useSpace", false);
-  const spaceCount = settings.get("spaceCount", 2);
+  const spaceCount = settings.get("spaceCount", 4);
+  const showFormatError = settings.get("showFormatError", true);
 
   const sep = __dirname.includes("/") ? "/" : "\\";
   const result: vscode.TextEdit[] = [];
@@ -56,24 +57,27 @@ export function format(
 	return [];
   }
 
-  let formatted: Buffer;
-  try {
-    const options: string[] = [];
-    if (useSpace) {
-      options.push("-s");
-    }
-    options.push("-c", spaceCount.toString(), tmpobj.name);
-
-    formatted = execFileSync(path, options);
-  } catch (error) {
-    throw error;
+  let options = " ";
+  if (useSpace) {
+	  options += "-s ";
   }
+  options += "-c "+ spaceCount.toString() + " " +tmpobj.name;
+
+  const spawn = spawnSync(path+options, {shell: true});
 
   tmpobj.removeCallback();
 
-  if (formatted) {
-	const f = formatted.toString().replace(/\n+$/,""); // execFileSyncで生じる末尾の改行を削除
+  if (spawn.status === 0) {
+	const f = spawn.output.toString().replace(/(^,|,$)/g,"").replace(/\n+$/,""); // spawnSyncで生じるゴミを削除
     result.push(new vscode.TextEdit(range, f));
+  } else if (spawn.status === 3 && showFormatError) {
+    vscode.window.showErrorMessage(
+		`grammer error: 文法が間違っている可能性があります`
+    );
+  } else {
+    vscode.window.showErrorMessage(
+		`error status ${spawn.status}: ${spawn.stderr.toString()}`
+    );
   }
 
   return result;

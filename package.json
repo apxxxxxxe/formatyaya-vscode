@@ -2,7 +2,7 @@
 	"name": "formatyaya-vscode",
 	"displayName": "formatyaya-vscode",
 	"description": "formatter for yaya",
-	"version": "0.1.7",
+	"version": "0.1.8",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
@@ -32,6 +32,12 @@
 					"type": "number",
 					"default": 4,
 					"description": "number of spaces when using spaces as indents"
+				},
+				"formatyaya-vscode.showFormatError": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "notify when formatting fails due to grammatical errors"
 				}
 			}
 		}
