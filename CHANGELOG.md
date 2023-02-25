@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.2.1
+
+- 整形時にコメントが消える場合があったのを修正
+
 ### 0.2.0
 
 ![formatyaya_transitoion_slash](https://user-images.githubusercontent.com/39634779/221236137-c34f5143-0f04-4fab-8ee6-2251d1d8122f.gif)
