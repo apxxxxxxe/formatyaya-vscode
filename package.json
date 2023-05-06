@@ -2,7 +2,7 @@
 	"name": "formatyaya-vscode",
 	"displayName": "formatyaya-vscode",
 	"description": "formatter for yaya",
-	"version": "0.2.32",
+	"version": "0.2.33",
 	"engines": {
 		"vscode": "^1.74.0"
 	},
